@@ -38,3 +38,66 @@ print(3 * 'un' + 'ium')
 
 #Two or more string literals (i.e. the ones enclosed between quotes) next to each other are automatically concatenated.
 print('Py''thon')
+
+#This feature is particularly useful when you want to break long strings:
+print('Put several strings within parentheses '
+        'to have them joined together.')
+
+prefix = 'Py'
+print(prefix + 'thon')
+
+#Strings can be indexed (subscripted), with the first character having index 0. There is no separate character type; a character is simply a string of size one:
+word= 'python'
+print(word[0])
+print(word[5])
+print(word[-1])
+print(word[-2])
+print(word[-6])
+
+#In addition to indexing, slicing is also supported. While indexing is used to obtain individual characters, slicing allows you to obtain a substring:
+print(word[0:2]) # characters from position 0 (included) to 2 (excluded)
+print(word[2:5]) # characters from position 2 (included) to 5 (excluded)
+
+#Slice indices have useful defaults; an omitted first index defaults to zero, an omitted second index defaults to the size of the string being sliced.
+print(word[:2]) # character from the beginning to position 2 (excluded)
+print(word[4:]) # characters from position 4 (included) to the end
+print(word[-2:]) # characters from the second-last (included) to the end
+
+#Note how the start is always included, and the end always excluded. This makes sure that s[:i] + s[i:] is always equal to s:
+print(word[:2] + word[2:])
+print(word[:4] + word[4:])
+
+#One way to remember how slices work is to think of the indices as pointing between characters, with the left edge of the first character numbered 0. Then the right edge of the last character of a string of n characters has index n, for example:
+#+---+---+---+---+---+---+
+# | P | y | t | h | o | n |
+# +---+---+---+---+---+---+
+# 0   1   2   3   4   5   6
+#-6  -5  -4  -3  -2  -1
+#The first row of numbers gives the position of the indices 0…6 in the string; the second row gives the corresponding negative indices. The slice from i to j consists of all characters between the edges labeled i and j, respectively.
+#For non-negative indices, the length of a slice is the difference of the indices, if both are within bounds. For example, the length of word[1:3] is 2.
+
+#Attempting to use an index that is too large will result in an error:
+#print(word[42]) # the word only has 6 characters
+#IndexError: string index out of range
+
+#However, out of range slice indexes are handled gracefully when used for slicing:
+print(word[4:42])
+print(word[42:])
+
+#Python strings cannot be changed — they are immutable. Therefore, assigning to an indexed position in the string results in an error:
+#word[0] = 'J'
+#raceback (most recent call last):
+#  File "<stdin>", line 1, in <module>
+#TypeError: 'str' object does not support item assignment
+#word[2:] = 'py'
+#Traceback (most recent call last):
+#  File "<stdin>", line 1, in <module>
+#TypeError: 'str' object does not support item assignment
+
+#If you need a different string, you should create a new one:
+print('J' + word[1:])
+print(word[:2] + 'py')
+
+#The built-in function len() returns the length of a string:
+s= 'supercalifragilisticexpialidocious'
+print(len(s))
