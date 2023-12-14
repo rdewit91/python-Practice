@@ -26,3 +26,28 @@ cubes = [1, 8, 27, 64, 125]
 cubes.append(216)
 cubes.append(7 ** 3)
 print(cubes)
+
+#Assignment to slices is also possible, and this can even change the size of the list or clear it entirely:
+letters= ['a', 'b', 'c', 'd', 'e', 'f', 'g']
+print(letters)
+# replace values
+letters[2:5] = ['C', 'D', 'E']
+print(letters)
+# remove values
+letters[2:5] = []
+print(letters)
+# clear the list by replacing all the elements with an empty list
+letters[:] = []
+print(letters)
+
+#The built-in function len() also applies to lists:
+letters = ['a', 'b', 'c', 'd']
+print(len(letters))
+
+# It is possible to nest lists (create lists containing other lists), for example:
+a= ['a', 'b', 'c']
+n= [1, 2, 3]
+x= [a, n]
+print(x)
+print(x[0])
+print(x[0][1])
