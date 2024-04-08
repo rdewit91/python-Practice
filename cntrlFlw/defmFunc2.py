@@ -184,10 +184,10 @@ combind_example(1, standard=2, kwd_only=3)
 #But using / (positional only arguments), it is possible since it allows name as a positional argument and 'name' as a key in the keyword arguments:
 
 def foo(name, /, **kwds):
-    return 'name' in kwds
+    print('name' in kwds)
+#    return 'name' in kwds
 
 foo(1, **{'name' : 2})
-#true
 
 #The use case will determine which parameters to use in the function definition:
 
@@ -198,7 +198,95 @@ foo(1, **{'name' : 2})
 #Use positional-only if you want the name of the parameters to not be available to the user. This is useful when parameter names have no real meaning, if you want to enforce the order of the arguments when the function is called or if you need to take some positional parameters and arbitrary keywords.
 
 #Use keyword-only when names have meaning and the function definition is more understandable by being explicit with names or you want to prevent users relying on the position of the argument being passed.
-
 #For an API, use positional-only to prevent breaking API changes if the parameter’s name is modified in the future.
 
 #Arbitrary Argument Lists
+
+#Finally, the least frequently used option is to specify that a function can be called with an arbitrary number of arguments. These arguments will be wrapped up in a tuple. Before the variable number of arguments, zero or more normal arguments may occur.
+
+def write_multiple_items(file, separator, *args):
+    file.write(separator.join(args))
+
+#Normally, these variadic arguments will be last in the list of formal parameters, because they scoop up all remaining input arguments that are passed to the function. Any formal parameters which occur after the *args parameter are ‘keyword-only’ arguments, meaning that they can only be used as keywords rather than positional arguments.
+
+def concat(*args, sep="/"):
+    print (sep.join(args))
+#    return sep.join(args)
+
+concat("earth", "mars", "venus")
+concat("earth", "mars", "venus", sep=".")
+
+#npacking Argument Lists
+
+#The reverse situation occurs when the arguments are already in a list or tuple but need to be unpacked for a function call requiring separate positional arguments. For instance, the built-in range() function expects separate start and stop arguments. If they are not available separately, write the function call with the *-operator to unpack the arguments out of a list or tuple:
+
+list(range(3,6))
+#[3, 4, 5]
+args = [3,6]
+list(range(*args))
+#[3, 4, 5]
+
+#In the same fashion, dictionaries can deliver keyword arguments with the **-operator:
+
+def parrot(voltage, state='a stiff', action='voom'):
+    print("-- This parrot wouldn't", action, end=' ')
+    print("if you put", voltage, "volts through it.", end=' ')
+    print("E's", state, "!")
+    
+d = {"voltage": "four million", "state": "bleedin' demised", "action": "VOOM"}
+parrot(**d)
+
+#Lambda Expressions
+
+#Small anonymous functions can be created with the lambda keyword. This function returns the sum of its two arguments: lambda a, b: a+b. Lambda functions can be used wherever function objects are required. They are syntactically restricted to a single expression. Semantically, they are just syntactic sugar for a normal function definition. Like nested function definitions, lambda functions can reference variables from the containing scope:
+
+def make_incrementor(n):
+#    print (lambda x: x + n)
+    return lambda x: x + n
+
+f = make_incrementor(42)
+f(0)
+#42
+f(1)
+#43
+
+
+#The above example uses a lambda expression to return a function. Another use is to pass a small function as an argument:
+
+pairs = [(1, 'one'), (2, 'two'), (3, 'three'), (4, 'four')]
+pairs.sort(key=lambda pair: pair[1])
+print(pairs)
+
+#Documentation Strings
+
+#Here are some conventions about the content and formatting of documentation strings.
+
+#The first line should always be a short, concise summary of the object’s purpose. For brevity, it should not explicitly state the object’s name or type, since these are available by other means (except if the name happens to be a verb describing a function’s operation). This line should begin with a capital letter and end with a period.
+
+#If there are more lines in the documentation string, the second line should be blank, visually separating the summary from the rest of the description. The following lines should be one or more paragraphs describing the object’s calling conventions, its side effects, etc.
+
+#The Python parser does not strip indentation from multi-line string literals in Python, so tools that process documentation have to strip indentation if desired. This is done using the following convention. The first non-blank line after the first line of the string determines the amount of indentation for the entire documentation string. (We can’t use the first line since it is generally adjacent to the string’s opening quotes so its indentation is not apparent in the string literal.) Whitespace “equivalent” to this indentation is then stripped from the start of all lines of the string. Lines that are indented less should not occur, but if they occur all their leading whitespace should be stripped. Equivalence of whitespace should be tested after expansion of tabs (to 8 spaces, normally).
+
+#Here is an example of a multi-line docstring:
+
+def my_function():
+    """Do nothing, but document it.
+
+    No, really, it doesn't do anything.
+    """
+    pass
+
+print(my_function.__doc__)
+
+# Function Annotations
+
+#Function annotations are completely optional metadata information about the types used by user-defined functions
+
+#Annotations are stored in the __annotations__ attribute of the function as a dictionary and have no effect on any other part of the function. Parameter annotations are defined by a colon after the parameter name, followed by an expression evaluating to the value of the annotation. Return annotations are defined by a literal ->, followed by an expression, between the parameter list and the colon denoting the end of the def statement. The following example has a required argument, an optional argument, and the return value annotated:
+
+def f(ham: str, eggs: str ='eggs') -> str:
+    print("Anotations:", f.__annotations__)
+    print("Arguments:", ham, eggs)
+    return ham + ' and ' + eggs
+
+f('spam')
